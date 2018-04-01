@@ -1,2 +1,2 @@
 # sophie
-An Open Information Extraction System
+SophIE is an open information extraction system.
