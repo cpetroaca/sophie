@@ -3,3 +3,4 @@
 /build
 /dist
 /sophie.egg-info
+/sophie/__pycache__
