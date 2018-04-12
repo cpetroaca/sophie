@@ -42,7 +42,7 @@ class Extractor:
             return False
         
         for left in token.lefts:
-            if left.dep_ in constants.NEG:
+            if left.dep_ in constants.NEG or left.tag_ == 'MD':
                 return False
         
         return True

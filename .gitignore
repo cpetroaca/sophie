@@ -4,3 +4,4 @@
 /dist
 /sophie.egg-info
 /sophie/__pycache__
+/tests/__pycache__
