@@ -53,5 +53,24 @@ class TestRelationsExtraction(unittest.TestCase):
             
         self.assertEqual(relation_number, 0)
     
+    def test_multiple_sentences(self):
+        text = 'Barack Obama visited China. Microsoft bought Intel.'
+        
+        relations = self.extractor.get_relations(text)
+        doc = self.spacyNlp(text)
+        relation_cnt = 0
+        for relation in relations:
+            relation_cnt += 1
+            
+            if relation_cnt == 1:
+                self.assertEqual(relation[0], doc[0:2])
+                self.assertEqual(relation[1], 'visit')
+                self.assertEqual(relation[2], doc[3:4])
+            
+            if relation_cnt == 2:
+                self.assertEqual(relation[0], doc[5:6])
+                self.assertEqual(relation[1], 'buy')
+                self.assertEqual(relation[2], doc[7:8])
+            
 if __name__ == '__main__':
     unittest.main()
