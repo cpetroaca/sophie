@@ -1,6 +1,7 @@
 import unittest
 import spacy
 from sophie import Extractor
+from sophie import Entity
 
 class TestRelationsExtraction(unittest.TestCase):
     def setUp(self):
@@ -16,9 +17,9 @@ class TestRelationsExtraction(unittest.TestCase):
         doc = self.spacyNlp(text)
         
         for relation in relations:
-            self.assertEqual(relation[0], doc[0:2])
-            self.assertEqual(relation[1], 'visit')
-            self.assertEqual(relation[2], doc[3:4])
+            self.assertEqual(relation.subj, Entity('Barack Obama', 'PERSON'))
+            self.assertEqual(relation.type, 'visit')
+            self.assertEqual(relation.obj, Entity('China', 'GPE'))
 
     def test_negation(self):
         text = 'Barack Obama did not visit China.'
@@ -63,14 +64,26 @@ class TestRelationsExtraction(unittest.TestCase):
             relation_cnt += 1
             
             if relation_cnt == 1:
-                self.assertEqual(relation[0], doc[0:2])
-                self.assertEqual(relation[1], 'visit')
-                self.assertEqual(relation[2], doc[3:4])
+                self.assertEqual(relation.subj, Entity('Barack Obama', 'PERSON'))
+                self.assertEqual(relation.type, 'visit')
+                self.assertEqual(relation.obj, Entity('China', 'GPE'))
             
             if relation_cnt == 2:
-                self.assertEqual(relation[0], doc[5:6])
-                self.assertEqual(relation[1], 'buy')
-                self.assertEqual(relation[2], doc[7:8])
-            
+                self.assertEqual(relation.subj, Entity('Microsoft', 'ORG'))
+                self.assertEqual(relation.type, 'buy')
+                self.assertEqual(relation.obj, Entity('Intel', 'ORG'))
+    
+    def test_passive_verb(self):
+        text = 'Microsoft was bought by Intel.'
+        
+        relations = self.extractor.get_relations(text)
+        
+        doc = self.spacyNlp(text)
+        
+        for relation in relations:
+            self.assertEqual(relation.subj, Entity('Intel', 'ORG'))
+            self.assertEqual(relation.type, 'buy')
+            self.assertEqual(relation.obj, Entity('Microsoft', 'ORG'))
+    
 if __name__ == '__main__':
     unittest.main()

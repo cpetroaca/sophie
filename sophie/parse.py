@@ -1,6 +1,8 @@
 import spacy
 from . import dep_utils
 from . import constants
+from .relations import Relation
+from .relations import Entity
 
 class Extractor:
     def __init__(self, model='en_core_web_sm'):
@@ -29,7 +31,9 @@ class Extractor:
                             obj_ner_span = self._get_ner_span(ents, obj)
                             
                             if (subj_ner_span is not None and obj_ner_span is not None):
-                                yield (subj_ner_span, verb, obj_ner_span)
+                                subj_entity = Entity(subj_ner_span.text, subj_ner_span.label_)
+                                obj_entity = Entity(obj_ner_span.text, obj_ner_span.label_)
+                                yield Relation(subj_entity, verb, obj_entity)
     
     def _get_ner_span(self, ents, token):
         for ent in ents:

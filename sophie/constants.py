@@ -1,3 +1,3 @@
-SUBJ_DEPS = {'agent', 'csubj', 'csubjpass', 'expl', 'nsubj', 'nsubjpass'}
-OBJ_DEPS = {'attr', 'dobj', 'dative', 'oprd'}
+SUBJ_DEPS = {'agent', 'nsubj'}
+OBJ_DEPS = {'dobj', 'nsubjpass'}
 NEG = {'neg'}
