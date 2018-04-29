@@ -85,5 +85,32 @@ class TestRelationsExtraction(unittest.TestCase):
             self.assertEqual(relation.type, 'buy')
             self.assertEqual(relation.obj, Entity('Microsoft', 'ORG'))
     
+    def test_conjuncts(self):
+        text = 'Barack Obama and Angela Merkel visited China and South Korea.'
+        
+        relations = self.extractor.get_relations(text)
+        doc = self.spacyNlp(text)
+        
+        cnt = 0
+        for relation in relations:
+            cnt += 1
+            
+            if cnt == 1:
+                self.assertEqual(relation.subj, Entity('Barack Obama', 'PERSON'))
+                self.assertEqual(relation.type, 'visit')
+                self.assertEqual(relation.obj, Entity('China', 'GPE'))
+            elif cnt == 2:
+                self.assertEqual(relation.subj, Entity('Barack Obama', 'PERSON'))
+                self.assertEqual(relation.type, 'visit')
+                self.assertEqual(relation.obj, Entity('South Korea', 'GPE'))
+            elif cnt == 3:
+                self.assertEqual(relation.subj, Entity('Angela Merkel', 'PERSON'))
+                self.assertEqual(relation.type, 'visit')
+                self.assertEqual(relation.obj, Entity('China', 'GPE'))
+            elif cnt == 4:
+                self.assertEqual(relation.subj, Entity('Angela Merkel', 'PERSON'))
+                self.assertEqual(relation.type, 'visit')
+                self.assertEqual(relation.obj, Entity('South Korea', 'GPE'))
+
 if __name__ == '__main__':
     unittest.main()
