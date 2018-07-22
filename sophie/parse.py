@@ -5,8 +5,9 @@ from .relations import Relation
 from .relations import Entity
 
 class Extractor:
-    def __init__(self, model='en_core_web_sm'):
+    def __init__(self, model='en_core_web_sm', ner_types=set(['PERSON', 'NORP', 'ORG', 'GPE', 'LOC', 'PRODUCT', 'MONEY'])):
         self.nlp = spacy.load(model)
+        self.ner_types = ner_types
         print("Loaded model '%s'" % model)
     
     def get_relations(self, text):
@@ -37,7 +38,7 @@ class Extractor:
     
     def _get_ner_span(self, ents, token):
         for ent in ents:
-            if token.i >= ent.start and token.i <= ent.end:
+            if ent.label_ in self.ner_types and token.i >= ent.start and token.i <= ent.end:
                 return ent
         return None
     
