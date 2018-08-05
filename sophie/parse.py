@@ -30,12 +30,13 @@ class Extractor:
                         for obj in objs:
                             subj_ner_span = self._get_ner_span(ents, subj)
                             obj_ner_span = self._get_ner_span(ents, obj)
+                            subj_entity = self._create_relation_entity(subj, subj_ner_span)
+                            obj_entity = self._create_relation_entity(obj, obj_ner_span)
                             
-                            if (subj_ner_span is not None and obj_ner_span is not None):
-                                subj_entity = Entity(subj_ner_span.text, subj_ner_span.label_)
-                                obj_entity = Entity(obj_ner_span.text, obj_ner_span.label_)
+                            if (subj_entity is not None and obj_entity is not None 
+                                and (subj_ner_span is not None or obj_ner_span is not None)):
                                 yield Relation(subj_entity, verb, obj_entity)
-    
+                            
     def _get_ner_span(self, ents, token):
         for ent in ents:
             if ent.label_ in self.ner_types and token.i >= ent.start and token.i <= ent.end:
@@ -46,8 +47,19 @@ class Extractor:
         if token.dep_ != 'ROOT' or token.pos_ != 'VERB':
             return False
         
+        #no negated or modal verbs
         for left in token.lefts:
             if left.dep_ in constants.NEG or left.tag_ == 'MD':
                 return False
         
         return True
+    
+    def _create_relation_entity(self, token, ner):
+        if (ner is not None):
+            return Entity(ner.text, ner.label_)
+        else:
+            if (token.pos_ == 'NOUN'):
+                return Entity(token.text, '')
+        
+        return None
+        

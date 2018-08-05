@@ -112,5 +112,27 @@ class TestRelationsExtraction(unittest.TestCase):
                 self.assertEqual(relation.type, 'visit')
                 self.assertEqual(relation.obj, Entity('South Korea', 'GPE'))
 
+    def test_only_one_ner_in_subj(self):
+        text = 'Barack Obama greeted the chancellor.'
+        
+        relations = self.extractor.get_relations(text)
+        doc = self.spacyNlp(text)
+        
+        for relation in relations:
+            self.assertEqual(relation.subj, Entity('Barack Obama', 'PERSON'))
+            self.assertEqual(relation.type, 'greet')
+            self.assertEqual(relation.obj, Entity('chancellor', ''))
+            
+    def test_only_one_ner_in_obj(self):
+        text = 'The chancellor greeted Barack Obama.'
+        
+        relations = self.extractor.get_relations(text)
+        doc = self.spacyNlp(text)
+        
+        for relation in relations:
+            self.assertEqual(relation.subj, Entity('chancellor', ''))
+            self.assertEqual(relation.type, 'greet')
+            self.assertEqual(relation.obj, Entity('Barack Obama', 'PERSON'))
+
 if __name__ == '__main__':
     unittest.main()
