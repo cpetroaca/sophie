@@ -39,7 +39,8 @@ class Extractor:
                             
     def _get_ner_span(self, ents, token):
         for ent in ents:
-            if ent.label_ in self.ner_types and token.i >= ent.start and token.i <= ent.end:
+            #Entity end index is subtracted by 1 since it contains the next token after the entity.
+            if ent.label_ in self.ner_types and token.i >= ent.start and token.i <= ent.end - 1:
                 return ent
         return None
     
